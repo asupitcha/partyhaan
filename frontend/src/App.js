@@ -1,23 +1,35 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { Link, Route, Routes, Outlet } from 'react-router-dom';
+import PartyPage from './pages/party/PartyPage';
+import PartiesPage from './pages/party/PartiesPage';
+
+function Main() {
+  return (
+    <div>
+      <div className="row bg-light py-2 px-4">
+        <div className="col-2 text-start m-auto">icon</div>
+        <div className="col h5 m-auto">ปาร์ตี้ทั้งหมด</div>
+        <div className="col-2 text-end">
+          <button className="btn btn-secondary">
+            สร้างปาร์ตี้
+        </button>
+        </div>
+      </div>
+      <Outlet />
+    </div>
+  );
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Main />}>
+          <Route index element={<PartiesPage />} />
+          <Route path=":id" element={<PartyPage />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
