@@ -29,7 +29,7 @@ module.exports = createCoreController(model, ({ strapi }) => ({
         "total_member": party.total_member
       }
     }
-    
+
     const response = await strapi.service(model).update(id, data);
     return response;
   },
@@ -44,10 +44,22 @@ module.exports = createCoreController(model, ({ strapi }) => ({
 
   async find(ctx) {
     const parties = await strapi.query(model).findMany({
-      where: ctx.query,
+      where: {
+        created_id: {
+          $not: ctx.state.user.id
+        }
+      },
       populate: populate
     });
     return parties;
+  },
+
+  async findOne(ctx) {
+    const { id } = ctx.params;
+    const party = await strapi.service(model).findOne(id, {
+      populate: populate
+    });
+    return party;
   },
 
   async create(ctx) {
@@ -56,12 +68,12 @@ module.exports = createCoreController(model, ({ strapi }) => ({
       data.created_id = ctx.state.user.id;
       const party = await strapi.service(model).create(data, { files });
       return party;
-    } 
+    }
     ctx.request.body.data.created_id = ctx.state.user.id;
     const party = await strapi.service(model).create(ctx.request.body);
     return party;
   },
-  
+
   async update(ctx) {
     const { id } = ctx.params;
 
@@ -77,7 +89,7 @@ module.exports = createCoreController(model, ({ strapi }) => ({
       const { data, files } = parseMultipartData(ctx);
       const response = await strapi.service(model).update(id, data, { files });
       return response;
-    } 
+    }
     const response = await strapi.service(model).update(id, ctx.request.body);
     return response;
   },
