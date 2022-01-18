@@ -1,0 +1,24 @@
+.party-container {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 4px 4px 9px #00000016;
+}
+
+.party-image {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  margin: auto;
+
+  .square {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

@@ -2,9 +2,11 @@
 import { useForm } from "react-hook-form";
 import swal from 'sweetalert';
 import { useRef } from "react";
+import { strapiApi } from "../../constant/constant";
+import { useNavigate } from "react-router-dom";
 
 async function registerUser(credentials) {
-  return fetch('http://localhost:1337/api/auth/local/register', {
+  return fetch(`${strapiApi}/auth/local/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -17,11 +19,12 @@ function RegisterPage(props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const password = useRef({});
   password.current = watch("password", "");
-  const onSubmit = async (data) => {
-    console.log(password.current);
+  const navigate = useNavigate();
 
+  const onSubmit = async (data) => {
     const response = await registerUser(data);
     if (response.user) {
+      swal('สร้างบัญชีผู้ใช้สำเร็จ').then(() => navigate('/login'));
       return;
     }
     swal(response.error.message);
@@ -55,8 +58,9 @@ function RegisterPage(props) {
           <div className="form-check">
             <input className="form-check-input" type="checkbox" id="terms" {...register("terms", { required: true })} />
             <label className="form-check-label" htmlFor="terms">ฉันยอมรับเงื่อนไขและข้อตกลงเกี่ยวกับการใช้งาน</label>
-            {errors.terms && <small className="text-danger">กรุณากดยอมรับเงื่อนไข</small>}
           </div>
+          {errors.terms && <small className="text-danger">กรุณากดยอมรับเงื่อนไข</small>}
+
           <button type="submit" className="btn btn-primary d-block m-auto my-5 w-50">ยืนยัน</button>
         </form>
       </div>

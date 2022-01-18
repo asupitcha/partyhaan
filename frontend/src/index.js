@@ -3,18 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
-import RegisterPage from './pages/resgister/RegisterPage';
+import RegisterPage from './pages/register/RegisterPage';
+
+const isAuthenticated = !!localStorage.getItem('currentUser');
 
 ReactDOM.render(
   <React.StrictMode>
     <div className="bg">
       <BrowserRouter>
         <Routes>
-          <Route path="parties" element={<App />} />
+          <Route path="/*" element={isAuthenticated ? <App /> : <Navigate to="/login" replace />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="/" element={<Navigate to="/parties" replace />} />
         </Routes>
       </BrowserRouter>
     </div>

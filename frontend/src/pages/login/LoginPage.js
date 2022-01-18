@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 import swal from 'sweetalert';
 import { Link, useNavigate } from "react-router-dom";
+import { strapiApi } from "../../constant/constant";
 
 async function loginUser(credentials) {
-  return fetch('http://localhost:1337/api/auth/local', {
+  return fetch(`${strapiApi}/auth/local`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -19,7 +20,9 @@ function LoginPage(props) {
   const onSubmit = async (data) => {
     const response = await loginUser(data);
     if (response.user) {
+      localStorage.setItem('currentUser', JSON.stringify(response));
       navigate('/');
+      window.location.reload(false);
       return;
     }
     swal(response.error.message);
